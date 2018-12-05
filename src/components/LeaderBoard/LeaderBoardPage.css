@@ -1,0 +1,34 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
+.current_score_container {
+    font-family: "Raleway" sans-serif;
+    font-size: 2em;
+    color: #ECE5CE;
+    font-weight: 300;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.custom_table_style{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom_table_row {
+    height: 50px;
+}
+
+.custom_table_row > th{
+    color: #ECE5CE;
+    border-bottom: 1px solid #ECE5CE;
+    font-size: 1.2em;
+    font-family: "Raleway" sans-serif;
+}
+
+.custom_table_row > td{
+    color: #ECE5CE;
+    border-bottom: 1px solid #ECE5CE;
+    font-size: 1.1em;
+    font-family: "Raleway" sans-serif;
+}

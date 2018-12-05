@@ -1,0 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,700);
+
+.header-text {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 3em;
+    color: #ECE5CE;
+    padding-top: 10%;
+}

@@ -1,0 +1,90 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
+$color-background: #83AF9B;
+$color-button: #ECE5CE;
+$color-button-background: #FE4365;
+$color-text: #333;
+
+$button-border-radius: .2em;
+$button-border-inner-width: .2em;
+$button-border-width: .4em;
+$button-height: 3em;
+$button-width: 10em;
+
+$loading-duration: 4s;
+
+.loader_button_container {
+  background-color: $color-background;
+  color: $color-text;
+  font-family: 'Raleway', sans-serif;
+  text-transform: uppercase;
+}
+
+input[type="checkbox"] {
+  display: none;
+  &:checked + label {
+    animation: loading-background $loading-duration linear forwards;
+  }
+  &:checked + label::after {
+    animation: loading $loading-duration linear forwards;
+  }
+}
+
+label {
+  background-color: $color-button-background;
+  cursor: pointer;
+  display: block;
+  height: 0;
+  left: 50%;
+  margin-left: -$button-width / 2;
+  margin-top: -$button-height / 2;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  width: $button-width;
+ 
+  &::before {
+    background-color: $color-button;
+    content: "";
+    display: block;
+    height: $button-height - ($button-border-inner-width * 2);
+    margin: $button-border-inner-width;
+    outline: $button-border-width solid $color-button;
+    outline-offset: $button-border-inner-width;
+    position: absolute;
+    width: $button-width - ($button-border-inner-width * 2);
+  }
+  
+  &::after {
+    content: "Continue";
+    line-height: $button-height;
+    position: relative;
+  }
+}
+
+@keyframes loading-background {
+  from {
+    height: 0;
+  }
+  to {
+    height: $button-height;
+  }
+}
+
+@keyframes loading {
+  0% {
+    content: "Loading"
+  }
+  30% {
+    content: "Loading."
+  }
+  60% {
+    content: "Loading.."
+  }
+  90% {
+    content: "Loading..."
+  }
+  100% {
+    content: "Loading....";
+  }
+}

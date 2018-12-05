@@ -1,0 +1,18 @@
+.game_page_container {
+    padding-top: 15%;
+}
+
+.current_score {
+    font-family: "Raleway" sans-serif;
+    margin-top: 250px;
+    font-size: 2em;
+    color: #ECE5CE;
+    font-weight: 300;
+}
+
+.timer {
+    font-family: "Raleway" sans-serif;
+    font-size: 2em;
+    color: #ECE5CE;
+    font-weight: 300;
+}

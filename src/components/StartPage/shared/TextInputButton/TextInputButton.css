@@ -1,0 +1,53 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
+.button_with_text {
+    position: relative;
+    padding-top: 15%;
+}
+
+.button_visible {
+    background-color: #ECE5CE;
+    color: #1F3944;
+    width: 50%;
+    border: 0px;
+    height: 50px;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+.button_invisible {
+    visibility: hidden;
+}
+  
+.slider {
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:70%;
+    overflow:hidden;
+    animation: fadein 3s ease-in;
+}
+ 
+.slider-active {
+    left:15%;
+}
+
+.slider_input_field {
+    background: transparent;
+    border: 0px;
+    border-bottom: 1px solid #ECE5CE;
+    height: 50px;
+    color: #ECE5CE;
+    font-size: 1.2em;
+    font-family: 'Raleway' sans-serif;
+    font-weight: 300;
+}
+
+@keyframes fadein {
+    from { 
+        opacity: 0; 
+    }
+    to { 
+        opacity: 1; 
+    }
+}
