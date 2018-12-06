@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { has, get } from 'lodash';
 import { patchRequest } from '../../utils/request.utils';
 import { setUserScore, setRemainingTime, changeGameState } from '../../redux/actions';
 import HitButton from './shared/HitButton.component';
@@ -12,19 +13,24 @@ class GamePage extends Component {
   }
 
   onTimeComplete = () => {
-    const { progressGame } = this.props;
-    // patchRequest('stop').then((response) => {
-    //   console.log(response);
-    // });
+    const { progressGame, userName } = this.props;
+    patchRequest('stop', { userName });
     progressGame(3);
   }
 
   hitHandler = () => {
-    const { userName, updateUserScore, currentScore } = this.props;
-    // patchRequest(`hit/${userName}`).then((response) => {
-    //   console.log(response);
-    // });
-    updateUserScore(currentScore + 1);
+    const {
+      userName, updateUserScore, currentScore, progressGame,
+    } = this.props;
+    patchRequest(`hit/${userName}`).then(response => response.json()).then((jsonResponse) => {
+      if (has(jsonResponse, 'score')) {
+        updateUserScore(get(jsonResponse, 'score', currentScore) + 1);
+      } else if (has(jsonResponse, 'gameOver')) {
+        patchRequest('stop', { userName });
+        clearInterval(this.timer);
+        progressGame(3);
+      }
+    });
   }
 
   tickHandler = () => {

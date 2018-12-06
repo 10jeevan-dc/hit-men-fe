@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { getRequest, postRequest } from '../../utils/request.utils';
 import { setUserAllocationDetails, userDetailsSet, changeGameState } from '../../redux/actions';
@@ -31,27 +32,20 @@ class StartPage extends Component {
   onContinue = () => {
     const { isInputFieldActive, inputFieldValue } = this.state;
     const {
-      setUserDetails, toggleUserDetailsSet, userName, progressGame,
+      setUserDetails, toggleUserDetailsSet, progressGame,
     } = this.props;
     if (isInputFieldActive) {
-      // postRequest('allocate/user', {
-      //   userName: inputFieldValue,
-      // }).then((response) => {
-      //   console.log(response);
-      // });
-      const mockResponse = {
-        sessionName: 'cjpapskjf000adk5vkbzpfxd2',
-        userName: 'Maha',
-        selfTeam: 'A',
-        opponentTeam: 'B',
-        gamePlayTimeInSeconds: 30,
-      };
-      setUserDetails(mockResponse);
-      toggleUserDetailsSet(true);
-      // getRequest(`start/'${userName}`).then((eligibilityResponse) => {
-      //   console.log('blah');
-      // });
-      progressGame(2);
+      postRequest('allocate/user', {
+        userName: inputFieldValue,
+      }).then(response => response.json()).then((jsonResponse) => {
+        setUserDetails(jsonResponse);
+        toggleUserDetailsSet(true);
+        getRequest(`start/${inputFieldValue}`).then(eligibilityResponse => eligibilityResponse.json()).then((jsonEligibilityResponse) => {
+          if (get(jsonEligibilityResponse, 'canStart', false)) {
+            progressGame(2);
+          }
+        });
+      });
     }
   }
 
