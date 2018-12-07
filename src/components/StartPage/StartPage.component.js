@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { getRequest, postRequest } from '../../utils/request.utils';
 import { setUserAllocationDetails, userDetailsSet, changeGameState } from '../../redux/actions';
 import TextInputButton from './shared/TextInputButton/TextInputButton.component';
 import LoaderButton from './shared/LoaderButton/LoaderButton.component';
 import './StartPage.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 class StartPage extends Component {
   state={
@@ -29,6 +31,10 @@ class StartPage extends Component {
     });
   }
 
+  refreshPage = () => {
+    window.location.reload();
+  }
+
   onContinue = () => {
     const { isInputFieldActive, inputFieldValue } = this.state;
     const {
@@ -37,13 +43,18 @@ class StartPage extends Component {
     if (isInputFieldActive) {
       postRequest('allocate/user', {
         userName: inputFieldValue,
-      }).then(response => response.json()).then((jsonResponse) => {
-        setUserDetails(jsonResponse);
+      }).then((jsonResponse) => {
+        setUserDetails(get(jsonResponse, 'data', {}));
         toggleUserDetailsSet(true);
-        getRequest(`start/${inputFieldValue}`).then(eligibilityResponse => eligibilityResponse.json()).then((jsonEligibilityResponse) => {
-          if (get(jsonEligibilityResponse, 'canStart', false)) {
+        getRequest(`start/${inputFieldValue}`).then((jsonEligibilityResponse) => {
+          if (get(jsonEligibilityResponse, 'data.canStart', false)) {
             progressGame(2);
           }
+        });
+      }).catch((error) => {
+        toast.error(get(error, 'response.data.message', 'Oops! An unexpected error occured'), {
+          onClose: this.refreshPage,
+          position: toast.POSITION.BOTTOM_CENTER,
         });
       });
     }
@@ -69,6 +80,7 @@ class StartPage extends Component {
           />
           )
         }
+        <ToastContainer />
       </div>
     );
   }
@@ -78,7 +90,6 @@ StartPage.propTypes = {
   setUserDetails: PropTypes.func,
   isUserDetailsSet: PropTypes.bool,
   toggleUserDetailsSet: PropTypes.func,
-  userName: PropTypes.string.isRequired,
   progressGame: PropTypes.func,
 };
 

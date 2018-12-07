@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { has, get } from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
 import { patchRequest } from '../../utils/request.utils';
 import { setUserScore, setRemainingTime, changeGameState } from '../../redux/actions';
 import HitButton from './shared/HitButton.component';
@@ -22,14 +23,20 @@ class GamePage extends Component {
     const {
       userName, updateUserScore, currentScore, progressGame,
     } = this.props;
-    patchRequest(`hit/${userName}`).then(response => response.json()).then((jsonResponse) => {
-      if (has(jsonResponse, 'score')) {
-        updateUserScore(get(jsonResponse, 'score', currentScore) + 1);
-      } else if (has(jsonResponse, 'gameOver')) {
+    patchRequest(`hit/${userName}`).then((jsonResponse) => {
+      const responseData = jsonResponse.data;
+      if (has(responseData, 'score')) {
+        updateUserScore(get(responseData, 'score', currentScore + 1));
+      } else if (has(responseData, 'gameOver')) {
         patchRequest('stop', { userName });
         clearInterval(this.timer);
         progressGame(3);
       }
+    }).catch((error) => {
+      toast.error(get(error, 'response.data.message', 'Oops! An unexpected error occured'), {
+        onClose: this.refreshPage,
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
     });
   }
 
@@ -61,6 +68,7 @@ class GamePage extends Component {
           {' '}
           s
         </div>
+        <ToastContainer />
       </div>
     );
   }

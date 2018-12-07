@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
   get, forOwn, has, map,
 } from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
 import { getRequest } from '../../utils/request.utils';
 import { setLeaderboardData, setUserScore, setTeamScoreData } from '../../redux/actions';
 import './LeaderBoardPage.css';
@@ -15,8 +16,8 @@ class LeaderBoardPage extends Component {
     } = this.props;
     const leaderBoardData = [];
     const teamScoreData = {};
-    getRequest(`score/${userName}`).then(scoreResponseStream => scoreResponseStream.json()).then((scoreResponse) => {
-      forOwn(get(scoreResponse, 'score', {}), (value, key) => {
+    getRequest(`score/${userName}`).then((scoreResponse) => {
+      forOwn(get(scoreResponse, 'data.score', {}), (value, key) => {
         if (typeof (value) === 'object' && has(value, 'score')) {
           map(value.members, (member) => {
             leaderBoardData.push({
@@ -28,10 +29,15 @@ class LeaderBoardPage extends Component {
           teamScoreData[key] = value.score;
         }
       });
-      const selfScore = get(scoreResponse, 'selfScore', 0);
+      const selfScore = get(scoreResponse, 'data.selfScore', 0);
       updateUserScore(selfScore);
       updateLeaderBoard(leaderBoardData);
       updateTeamScores(teamScoreData);
+    }).catch((error) => {
+      toast.error(get(error, 'response.data.message', 'Oops! An unexpected error occured'), {
+        onClose: this.refreshPage,
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
     });
   }
 
@@ -92,6 +98,7 @@ class LeaderBoardPage extends Component {
             {leaderBoardData.map(playerData => this.getLeaderboardTableRow(playerData.playerName, playerData.score, playerData.team))}
           </tbody>
         </table>
+        <ToastContainer />
       </div>
     );
   }
