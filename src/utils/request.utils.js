@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import axios from 'axios';
 
-const baseUrl = 'http://35.244.175.228';
+const baseUrl = 'http://35.244.247.204';
 
 export const getRequest = endPoint => axios(`${baseUrl}/${endPoint}`, {
   method: 'GET',
